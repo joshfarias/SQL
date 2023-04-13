@@ -3,18 +3,35 @@
 USE COMSC210_LAB9;
 
 -- a. Order Subtotals:
-SELECT OrderID, SUM(UnitPrice * Quantity) AS Subtotal
-FROM order_details
-GROUP BY OrderID;
+select OrderID,
+format(sum(UnitPrice * Quantity * (1 - Discount)), 2) as Subtotal
+from order_details
+group by OrderID
+order by OrderID;
 
 -- b. Sales by Year:
-SELECT YEAR(o.ShippedDate) AS SalesYear, SUM(od.UnitPrice * od.Quantity) AS TotalSales
-FROM order_details od
-JOIN Orders o ON o.OrderID = od.OrderID
-GROUP BY YEAR(o.ShippedDate);
+SELECT 
+  LPAD(Order_Year, 4, ' ') AS Order_Year, 
+  FORMAT(Total_Sales, 2) AS Total_Sales
+FROM 
+  (
+    SELECT 
+      YEAR(ShippedDate) AS Order_Year, 
+      SUM(UnitPrice * Quantity * (1-Discount)) AS Total_Sales
+    FROM 
+      `order_details`
+      INNER JOIN 
+      Orders 
+      ON 
+      `order_details`.OrderID = Orders.OrderID
+    GROUP BY 
+      Order_Year
+    ORDER BY 
+      Order_Year
+  ) AS SalesByYear;
 
 -- c. Employees Sales by Name:
-SELECT e.EmployeeID, e.FirstName, e.LastName, e.Country, SUM(od.UnitPrice * od.Quantity) AS SalesAmount
+SELECT e.EmployeeID, e.FirstName, e.LastName, e.Country, FORMAT(SUM(od.UnitPrice * od.Quantity), 2) AS SalesAmount
 FROM Employees e
 JOIN Orders o ON o.EmployeeID = e.EmployeeID
 JOIN Customers cu ON cu.CustomerID = o.CustomerID
