@@ -3,7 +3,7 @@ Repo containing notes and examples for SQL scripts, queries, databases and model
 
 # COMSC210 
 
-##Lab 9
+## Lab 9
 
 ## Northwind Traders Database:
 - [comsc210-lab9-database.sql](https://github.com/joshfarias/SQL/blob/main/COMSC210/Lab9/comsc210-lab9-database.sql)
